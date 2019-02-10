@@ -17,7 +17,8 @@ app_defaults = {
     'YDL_EXTRACT_AUDIO_FORMAT': None,
     'YDL_EXTRACT_AUDIO_QUALITY': '192',
     'YDL_RECODE_VIDEO_FORMAT': None,
-    'YDL_OUTPUT_TEMPLATE': '/youtube-dl/%(title)s [%(id)s].%(ext)s',
+    'YDL_OUTPUT_BASE_DIRECTORY': '/youtube-dl',
+    'YDL_OUTPUT_TEMPLATE': '%(title)s [%(id)s].%(ext)s',
     'YDL_ARCHIVE_FILE': None,
     'YDL_SERVER_HOST': '0.0.0.0',
     'YDL_SERVER_PORT': 8080,
@@ -97,10 +98,24 @@ def get_ydl_options(request_options):
             'preferedformat': ydl_vars['YDL_RECODE_VIDEO_FORMAT'],
         })
 
+    # Default path
+    ydl_output_template = os.path.join(
+      ydl_vars['YDL_OUTPUT_BASE_DIRECTORY'], 
+      ydl_vars['YDL_OUTPUT_TEMPLATE'],
+    )
+
+    ydl_output_template = os.path.join(
+      ydl_vars['YDL_OUTPUT_BASE_DIRECTORY'], 
+      request_options['sub_directory'], 
+      ydl_vars['YDL_OUTPUT_TEMPLATE'],
+    )
+
+    #ydl_output_template = '/youtube-dl/test/%(title)s [%(id)s].%(ext)s'
+
     return {
         'format': ydl_vars['YDL_FORMAT'],
         'postprocessors': postprocessors,
-        'outtmpl': ydl_vars['YDL_OUTPUT_TEMPLATE'],
+        'outtmpl': ydl_output_template,
         'download_archive': ydl_vars['YDL_ARCHIVE_FILE']
     }
 
