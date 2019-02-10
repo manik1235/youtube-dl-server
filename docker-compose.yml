@@ -1,0 +1,10 @@
+version: '3'
+services:
+  youtube-dl:
+    build: .
+    container_name: youtube-dl
+    network_mode: host
+    user: "1002:1006"
+    volumes:
+      - /media/d-4tb/media/youtube-dl:/youtube-dl
+    restart: unless-stopped

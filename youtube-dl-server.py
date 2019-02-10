@@ -24,6 +24,7 @@ app_defaults = {
 }
 
 
+@app.route('/')
 @app.route('/youtube-dl')
 def dl_queue_list():
     return static_file('index.html', root='./')
@@ -34,6 +35,7 @@ def server_static(filename):
     return static_file(filename, root='./static')
 
 
+@app.route('/q', method='GET')
 @app.route('/youtube-dl/q', method='GET')
 def q_size():
     return {"success": True, "size": json.dumps(list(dl_q.queue))}
@@ -42,8 +44,10 @@ def q_size():
 @app.route('/youtube-dl/q', method='POST')
 def q_put():
     url = request.forms.get("url")
+    sub_directory = request.forms.get("sub-directory")
     options = {
-        'format': request.forms.get("format")
+        'format': request.forms.get("format"),
+        'sub_directory': sub_directory
     }
 
     if not url:
